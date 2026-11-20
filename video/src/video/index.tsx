@@ -15,18 +15,26 @@ const RATE = 1.2;
 const seg = (sec: number) => Math.round((sec / RATE) * 30);
 
 const SCENES: { src: string; sec: number; caption: string }[] = [
-  { src: "clips/c1-login.mp4", sec: 9.33, caption: "Вход в один клик — сразу дашборд" },
-  { src: "clips/c2-schedule.mp4", sec: 17.5, caption: "Расписание: переносы, отмены и «окна»" },
-  { src: "clips/c3-grades.mp4", sec: 17.46, caption: "Оценки, посещаемость и зимняя сессия" },
-  { src: "clips/c4-requests.mp4", sec: 15.5, caption: "Справки и вопросы деканату со статусами" },
-  { src: "clips/c5-notif.mp4", sec: 18.25, caption: "Уведомления о изменениях и дедлайнах" },
+  { src: "clips/c1-login.mp4", sec: 11.13, caption: "Вход в один клик — сразу дашборд" },
+  { src: "clips/c2-schedule.mp4", sec: 10.54, caption: "Расписание: переносы, отмены и «окна»" },
+  { src: "clips/c3-grades.mp4", sec: 11.04, caption: "Оценки, посещаемость и зимняя сессия" },
+  { src: "clips/c4-requests.mp4", sec: 10.58, caption: "Справки и вопросы деканату со статусами" },
+  { src: "clips/c4b-newreq.mp4", sec: 8.96, caption: "Новая заявка за полминуты" },
+  { src: "clips/c5-notif.mp4", sec: 9.46, caption: "Уведомления об изменениях и дедлайнах" },
+  { src: "clips/c5b-profile.mp4", sec: 7.21, caption: "Профиль и контакты деканата" },
+];
+
+const MOBILE_SCENES: { src: string; sec: number }[] = [
+  { src: "clips/m1-dash.mp4", sec: 10.08 },
+  { src: "clips/m2-schedule.mp4", sec: 9.63 },
+  { src: "clips/m3-notif.mp4", sec: 9.42 },
 ];
 
 const FADE = 12;
 const TITLE = 100;
 const SHOWCASE = 60 + SCENES.reduce((a, s) => a + seg(s.sec), 0);
 const STATS = 140;
-const SITE = 380;
+const SITE = 60 + MOBILE_SCENES.reduce((a, s) => a + seg(s.sec), 0);
 const OUTRO = 100;
 const T = 36;
 
@@ -119,7 +127,18 @@ const Site = () => {
   return (
     <>
       <div style={{ position: "absolute", left: 120, top: 30, display: "flex", justifyContent: "center", ...rise }}>
-        <Device spec={IPHONE_PRO_MAX} src="clips/mobile.mp4" playbackRate={2.4} style={{ height: 660 }} />
+        {(() => {
+          let at = 60;
+          return MOBILE_SCENES.map((s, i) => {
+            const from = at;
+            at += seg(s.sec);
+            return (
+              <Sequence key={i} from={from} durationInFrames={seg(s.sec)}>
+                <Device spec={IPHONE_PRO_MAX} src={s.src} playbackRate={RATE} style={{ height: 660 }} />
+              </Sequence>
+            );
+          });
+        })()}
       </div>
       <div
         style={{
