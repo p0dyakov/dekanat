@@ -5,6 +5,7 @@ const nextConfig: NextConfig = {
   // Cache Components не поддерживается рантаймом Cloudflare Workers (workerd setTimeout)
   // cacheComponents: true,
   // partialPrefetching: true,
+  devIndicators: false,
   turbopack: {
     rules: {
       "*.css": {

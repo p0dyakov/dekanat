@@ -25,7 +25,7 @@ export function Providers({ children }: { children: ReactNode }) {
   return (
     <FluidProvider shape="rounded" size="default">
       {children}
-      {process.env.NODE_ENV === "development" && (
+      {process.env.NODE_ENV === "development" && process.env.NEXT_PUBLIC_DEVTOOLS === "1" && (
         <>
           <DevGrab />
           <Agentation />

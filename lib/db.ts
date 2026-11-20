@@ -412,6 +412,9 @@ interface D1Like {
 }
 
 async function createD1Db(): Promise<Db | null> {
+  // В dev-режиме getCloudflareContext отдаёт новый пустой D1 на каждый запрос —
+  // используем node:sqlite, чтобы данные переживали запросы. D1 — только в проде.
+  if (process.env.NODE_ENV !== "production") return null;
   try {
     const { getCloudflareContext } = await import("@opennextjs/cloudflare");
     const { env } = await getCloudflareContext({ async: true });
