@@ -8,3 +8,5 @@ dev.db
 video/node_modules/
 video/out/
 video/public/clips/
+data/
+next-env.d.ts
