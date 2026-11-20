@@ -1,0 +1,283 @@
+/* Transitions.dev — Number pop-in. Digits rise on a drum, pull back and spring past 100%.
+   Used for first appearance: there is no old digit, only the new one comes in.
+   Each glyph sets --digit-i, so a number of any length staggers glyph by glyph. */
+
+/* Headings in the deck use the regular (sans) face, not the site serif. */
+.slides h1,
+.slides h2,
+.slides h3 {
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+}
+
+.slides {
+  --digit-dur: 600ms;
+  --digit-enter-delay: 50ms;
+  --digit-stagger: 40ms;
+  --digit-distance: 0.52em;
+  --digit-blur: max(0.067em, 0.171em - 2.1px);
+  --digit-lift: 0.125em;
+  --digit-start-scale: 0.7;
+  --digit-peak: 1.03;
+}
+
+.t-digit-group {
+  display: inline-flex;
+  align-items: baseline;
+}
+.t-digit {
+  display: inline-block;
+  white-space: pre;
+}
+.t-digit-group .t-digit {
+  opacity: 0;
+}
+.t-digit-group.is-animating .t-digit {
+  opacity: 1;
+  animation: t-digit-in var(--digit-dur) linear both;
+  animation-delay: calc(
+    var(--digit-stagger) * var(--digit-i, 0) + var(--digit-enter-delay) +
+      var(--digit-wait, 0ms)
+  );
+}
+
+@keyframes t-digit-in {
+  0% {
+    transform: translateY(
+        calc(var(--digit-distance) * 1 + var(--digit-lift) * 0)
+      )
+      scale(var(--digit-start-scale));
+    opacity: 0;
+    filter: blur(calc(var(--digit-blur) * 1));
+  }
+  5% {
+    transform: translateY(
+        calc(var(--digit-distance) * 0.941 + var(--digit-lift) * 0.216)
+      )
+      scale(var(--digit-start-scale));
+    opacity: 0.059;
+    filter: blur(calc(var(--digit-blur) * 1));
+  }
+  10% {
+    transform: translateY(
+        calc(var(--digit-distance) * 0.755 + var(--digit-lift) * 0.648)
+      )
+      scale(var(--digit-start-scale));
+    opacity: 0.245;
+    filter: blur(calc(var(--digit-blur) * 1));
+  }
+  15% {
+    transform: translateY(
+        calc(var(--digit-distance) * 0.475 + var(--digit-lift) * 0.972)
+      )
+      scale(var(--digit-start-scale));
+    opacity: 0.525;
+    filter: blur(calc(var(--digit-blur) * 1));
+  }
+  20% {
+    transform: translateY(
+        calc(var(--digit-distance) * 0.206 + var(--digit-lift) * 0.792)
+      )
+      scale(calc(1 + (var(--digit-start-scale) - 1) * 0.792));
+    opacity: 0.794;
+    filter: blur(calc(var(--digit-blur) * 0.9));
+  }
+  25% {
+    transform: translateY(
+        calc(var(--digit-distance) * 0.041 + var(--digit-lift) * 0.392)
+      )
+      scale(calc(1 + (var(--digit-start-scale) - 1) * 0.392));
+    opacity: 0.959;
+    filter: blur(calc(var(--digit-blur) * 0.75));
+  }
+  30% {
+    transform: translateY(
+        calc(var(--digit-distance) * 0 + var(--digit-lift) * 0.033)
+      )
+      scale(calc(1 + (var(--digit-start-scale) - 1) * 0.033));
+    opacity: 1;
+    filter: blur(calc(var(--digit-blur) * 0.6));
+  }
+  35% {
+    transform: translateY(
+        calc(var(--digit-distance) * 0 + var(--digit-lift) * -0.194)
+      )
+      scale(calc(1 + (var(--digit-peak) - 1) * 0.711));
+    opacity: 1;
+    filter: blur(calc(var(--digit-blur) * 0.45));
+  }
+  40% {
+    transform: translateY(
+        calc(var(--digit-distance) * 0 + var(--digit-lift) * -0.272)
+      )
+      scale(calc(1 + (var(--digit-peak) - 1) * 0.997));
+    opacity: 1;
+    filter: blur(calc(var(--digit-blur) * 0.3));
+  }
+  45% {
+    transform: translateY(
+        calc(var(--digit-distance) * 0 + var(--digit-lift) * -0.238)
+      )
+      scale(calc(1 + (var(--digit-peak) - 1) * 0.87));
+    opacity: 1;
+    filter: blur(calc(var(--digit-blur) * 0.15));
+  }
+  50% {
+    transform: translateY(
+        calc(var(--digit-distance) * 0 + var(--digit-lift) * -0.146)
+      )
+      scale(calc(1 + (var(--digit-peak) - 1) * 0.535));
+    opacity: 1;
+    filter: blur(calc(var(--digit-blur) * 0));
+  }
+  55% {
+    transform: translateY(
+        calc(var(--digit-distance) * 0 + var(--digit-lift) * -0.05)
+      )
+      scale(calc(1 + (var(--digit-peak) - 1) * 0.183));
+    opacity: 1;
+    filter: blur(calc(var(--digit-blur) * 0));
+  }
+  60% {
+    transform: translateY(
+        calc(var(--digit-distance) * 0 + var(--digit-lift) * 0.019)
+      )
+      scale(calc(1 + (var(--digit-peak) - 1) * -0.069));
+    opacity: 1;
+    filter: blur(calc(var(--digit-blur) * 0));
+  }
+  65% {
+    transform: translateY(
+        calc(var(--digit-distance) * 0 + var(--digit-lift) * 0.05)
+      )
+      scale(calc(1 + (var(--digit-peak) - 1) * -0.185));
+    opacity: 1;
+    filter: blur(calc(var(--digit-blur) * 0));
+  }
+  70% {
+    transform: translateY(
+        calc(var(--digit-distance) * 0 + var(--digit-lift) * 0.051)
+      )
+      scale(calc(1 + (var(--digit-peak) - 1) * -0.187));
+    opacity: 1;
+    filter: blur(calc(var(--digit-blur) * 0));
+  }
+  75% {
+    transform: translateY(
+        calc(var(--digit-distance) * 0 + var(--digit-lift) * 0.035)
+      )
+      scale(calc(1 + (var(--digit-peak) - 1) * -0.128));
+    opacity: 1;
+    filter: blur(calc(var(--digit-blur) * 0));
+  }
+  80% {
+    transform: translateY(
+        calc(var(--digit-distance) * 0 + var(--digit-lift) * 0.016)
+      )
+      scale(calc(1 + (var(--digit-peak) - 1) * -0.057));
+    opacity: 1;
+    filter: blur(calc(var(--digit-blur) * 0));
+  }
+  85% {
+    transform: translateY(
+        calc(var(--digit-distance) * 0 + var(--digit-lift) * 0.002)
+      )
+      scale(calc(1 + (var(--digit-peak) - 1) * -0.007));
+    opacity: 1;
+    filter: blur(calc(var(--digit-blur) * 0));
+  }
+  90% {
+    transform: translateY(
+        calc(var(--digit-distance) * 0 + var(--digit-lift) * -0.004)
+      )
+      scale(calc(1 + (var(--digit-peak) - 1) * 0.013));
+    opacity: 1;
+    filter: blur(calc(var(--digit-blur) * 0));
+  }
+  95% {
+    transform: translateY(
+        calc(var(--digit-distance) * 0 + var(--digit-lift) * -0.003)
+      )
+      scale(calc(1 + (var(--digit-peak) - 1) * 0.011));
+    opacity: 1;
+    filter: blur(calc(var(--digit-blur) * 0));
+  }
+  100% {
+    transform: none;
+    opacity: 1;
+    filter: none;
+  }
+}
+
+/* Odometer counter: each digit lives in a 1em window with soft-faded edges;
+   the 0–9 strip inside rolls by translateY, so only the changed digits move.
+   Glyphs sit on each cell's bottom edge, so the row's baseline matches the
+   plain text around it and the window shows the roll, not a hard swap.
+   The tens column shows a leading blank cell under 10 to keep width stable. */
+.t-counter {
+  display: inline-flex;
+}
+.t-counter-win {
+  display: inline-block;
+  height: 1em;
+  overflow: hidden;
+  mask-image: linear-gradient(
+    to bottom,
+    transparent,
+    #000 18%,
+    #000 82%,
+    transparent
+  );
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent,
+    #000 18%,
+    #000 82%,
+    transparent
+  );
+}
+.t-counter-strip {
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+.t-counter-strip > span {
+  display: flex;
+  align-items: flex-end;
+  height: 1em;
+  white-space: pre;
+}
+
+/* Transitions.dev — Page side-by-side, with the slide and blur switched off
+   (--page-exit-enabled: 0): slides cross-fade by opacity alone. */
+.slides {
+  --page-fade-dur: 250ms;
+  --page-fade-ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+.t-page {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--page-fade-dur) var(--page-fade-ease);
+  will-change: opacity;
+}
+.t-page[data-active] {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+
+/* Print and PDF: everything in its final state, one slide per page. */
+.slides-print .t-digit-group .t-digit {
+  opacity: 1;
+  animation: none !important;
+}
+@page {
+  size: 1920px 1080px;
+  margin: 0;
+}
+/* Layered blurred shadows rasterise into grey slabs in PDF: print keeps the hairline ring alone. */
+.slides-print .shadow-surface-3 {
+  box-shadow: var(--shadow-1);
+}
