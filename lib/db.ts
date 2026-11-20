@@ -106,7 +106,7 @@ const SCHEMA = `
 
 declare global {
   var __dekanatNodeDb: Db | undefined;
-  var __dekanatSeeded: boolean | undefined;
+  var __dekanatSeeded: Record<string, boolean> | undefined;
 }
 
 function iso(d: Date) {
@@ -456,8 +456,14 @@ async function createNodeDb(): Promise<Db> {
 export async function getDb(): Promise<Db> {
   // В Workers промисы не могут «дожить» до следующего запроса —
   // поэтому D1-биндинг берём свежим на каждый запрос, а кешируем только значения.
-  const db = (await createD1Db()) ?? (globalThis.__dekanatNodeDb ??= await createNodeDb());
-  if (!globalThis.__dekanatSeeded) {
+  const d1 = await createD1Db();
+  const db = d1 ?? (globalThis.__dekanatNodeDb ??= await createNodeDb());
+  const key = d1 ? "d1" : "node";
+  if (typeof globalThis.__dekanatSeeded !== "object" || globalThis.__dekanatSeeded === null) {
+    globalThis.__dekanatSeeded = {};
+  }
+  const seeded = globalThis.__dekanatSeeded;
+  if (!seeded[key]) {
     for (const stmt of SCHEMA.split(";")) {
       const sql = stmt.trim();
       if (sql) await db.run(sql);
@@ -470,7 +476,7 @@ export async function getDb(): Promise<Db> {
         // параллельный запрос засидал первым — игнорируем
       }
     }
-    globalThis.__dekanatSeeded = true;
+    seeded[key] = true;
   }
   return db;
 }
