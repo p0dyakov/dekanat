@@ -1,30 +1,32 @@
-import { AbsoluteFill, Sequence, interpolate, spring, useCurrentFrame, useVideoConfig } from "remotion";
+import { AbsoluteFill, Img, OffthreadVideo, Sequence, interpolate, spring, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
 import { TransitionSeries, linearTiming } from "@remotion/transitions";
 import { Backdrop } from "@/components/remocn/backdrop";
 import { SoftBlurIn } from "@/components/remocn/soft-blur-in";
 import { BlurOutUp } from "@/components/remocn/blur-out-up";
 import { focusPull } from "@/components/remocn/focus-pull";
-import { Device, MACBOOK_PRO_14 } from "@/components/device";
+import { MACBOOK_PRO_14, SCREEN_BOX } from "@/components/device";
 import { BRAND, FONT_VARS, SANS } from "./brand";
 
-// Все клипы записаны вьюпортом 1536x1000 — то же соотношение, что у экрана
-// MacBook Pro 14 в рамке (3024x1968, ~1.536), поэтому видео заполняет экран 1:1.
+// Клипы записаны вьюпортом 1512x982 @2x — 1:1 с вырезом экрана рамки
+// MacBook Pro 14 (3024x1964), видео заполняет экран без кропа.
 const RATE = 1.25;
-const TRIM = 2.0; // срезаем прогруз страницы в начале каждого клипа
+const TRIM = 1.5; // срезаем статичное начало клипа (после settle_ms страница уже гидрирована)
+const XFADE = 8; // кроссфейд между сценами, кадры
 const seg = (sec: number) => Math.round(((sec - TRIM) / RATE) * 30);
 
 const SCENES: { src: string; sec: number; caption: string }[] = [
-  { src: "clips/c1-login.mp4", sec: 13.58, caption: "Вход в один клик — сразу дашборд" },
-  { src: "clips/c2-schedule.mp4", sec: 14.63, caption: "Расписание: переносы, отмены и «окна»" },
-  { src: "clips/c3-grades.mp4", sec: 15.13, caption: "Оценки, посещаемость и зимняя сессия" },
-  { src: "clips/c4-requests.mp4", sec: 12.08, caption: "Справки и вопросы деканату со статусами" },
-  { src: "clips/c4b-newreq.mp4", sec: 11.58, caption: "Новая заявка за полминуты" },
-  { src: "clips/c5-notif.mp4", sec: 12.08, caption: "Уведомления об изменениях и дедлайнах" },
-  { src: "clips/c5b-profile.mp4", sec: 13.08, caption: "Профиль и контакты деканата" },
+  { src: "clips/c1-login.mp4", sec: 9.73, caption: "Вход в один клик — сразу дашборд" },
+  { src: "clips/c2-schedule.mp4", sec: 12.43, caption: "Расписание: переносы, отмены и «окна»" },
+  { src: "clips/c3-grades.mp4", sec: 10.3, caption: "Оценки, посещаемость и зимняя сессия" },
+  { src: "clips/c4-requests.mp4", sec: 10.0, caption: "Справки и вопросы деканату со статусами" },
+  { src: "clips/c4b-newreq.mp4", sec: 9.5, caption: "Новая заявка за полминуты" },
+  { src: "clips/c5-notif.mp4", sec: 9.1, caption: "Уведомления об изменениях и дедлайнах" },
+  { src: "clips/c5b-profile.mp4", sec: 10.0, caption: "Профиль и контакты деканата" },
 ];
 
 const TITLE = 110;
-const SHOWCASE = 50 + SCENES.reduce((a, s) => a + seg(s.sec), 0);
+const INTRO = 40;
+const SHOWCASE = INTRO + SCENES.reduce((a, s) => a + seg(s.sec), 0);
 const T = 30;
 
 export const LAUNCH_FRAMES = TITLE + SHOWCASE - T;
@@ -54,63 +56,72 @@ const useRise = () => {
   };
 };
 
-const LAPTOP_W = 900;
+const LAPTOP_W = 920;
 
-const Showcase = () => {
-  const rise = useRise();
-  let at = 50;
+/** Экранная область одного клипа: фейд-ин поверх предыдущей сцены. */
+const ScreenClip = ({ src, first }: { src: string; first: boolean }) => {
+  const frame = useCurrentFrame();
+  const op = first ? 1 : interpolate(frame, [0, XFADE], [0, 1], { extrapolateRight: "clamp" });
   return (
-    <AbsoluteFill>
-      {SCENES.map((s, i) => {
-        const from = at;
-        at += seg(s.sec);
-        return (
-          <Sequence key={i} from={from} durationInFrames={seg(s.sec)}>
-            <SceneInner src={s.src} caption={s.caption} rise={i === 0 ? rise : undefined} />
-          </Sequence>
-        );
-      })}
-    </AbsoluteFill>
+    <div style={{ position: "absolute", overflow: "hidden", background: "#f5f5f5", opacity: op, ...SCREEN_BOX }}>
+      <OffthreadVideo
+        src={staticFile(src)}
+        muted
+        startFrom={Math.round(TRIM * 30)}
+        playbackRate={RATE}
+        style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }}
+      />
+    </div>
   );
 };
 
-const SceneInner = ({
-  src,
-  caption,
-  rise,
-}: {
-  src: string;
-  caption: string;
-  rise?: { opacity: number; transform: string };
-}) => {
-  const frame = useCurrentFrame();
-  const fade = interpolate(frame, [0, 7], [0.35, 1], { extrapolateRight: "clamp" });
+const Caption = ({ text }: { text: string }) => (
+  <div style={{ position: "absolute", left: 0, right: 0, bottom: 30, display: "flex", justifyContent: "center" }}>
+    <BlurOutUp text={text} fontSize={38} fontWeight={600} color={BRAND.text} />
+  </div>
+);
+
+const Showcase = () => {
+  const rise = useRise();
+  let at = INTRO;
+  const spans = SCENES.map((s, i) => {
+    const from = at;
+    at += seg(s.sec);
+    // хвост кроссфейда: предыдущая сцена живёт ещё XFADE кадров под следующей
+    return { ...s, from, len: seg(s.sec) + (i < SCENES.length - 1 ? XFADE : 0), segLen: seg(s.sec) };
+  });
   return (
-    <>
+    <AbsoluteFill>
       <div
         style={{
           position: "absolute",
           left: 0,
           right: 0,
-          top: 24,
+          top: 20,
           display: "flex",
           justifyContent: "center",
-          opacity: (rise?.opacity ?? 1) * fade,
-          transform: rise?.transform,
+          opacity: rise.opacity,
+          transform: rise.transform,
         }}
       >
-        <Device
-          spec={MACBOOK_PRO_14}
-          src={src}
-          playbackRate={RATE}
-          startFrom={Math.round(TRIM * 24)}
-          style={{ width: LAPTOP_W }}
-        />
+        <div style={{ position: "relative", width: LAPTOP_W, aspectRatio: MACBOOK_PRO_14.ratio }}>
+          {spans.map((s, i) => (
+            <Sequence key={i} from={s.from} durationInFrames={s.len} layout="none">
+              <ScreenClip src={s.src} first={i === 0} />
+            </Sequence>
+          ))}
+          <Img
+            src={staticFile(MACBOOK_PRO_14.frame)}
+            style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none" }}
+          />
+        </div>
       </div>
-      <div style={{ position: "absolute", left: 0, right: 0, bottom: 34, display: "flex", justifyContent: "center" }}>
-        <BlurOutUp text={caption} fontSize={38} fontWeight={600} color={BRAND.text} />
-      </div>
-    </>
+      {spans.map((s, i) => (
+        <Sequence key={i} from={s.from} durationInFrames={s.segLen} layout="none">
+          <Caption text={s.caption} />
+        </Sequence>
+      ))}
+    </AbsoluteFill>
   );
 };
 
