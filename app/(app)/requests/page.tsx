@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import type { ComponentProps } from "react";
 import { FastLink } from "@fast-link/next";
 import { connection } from "next/server";
 import { redirect } from "next/navigation";
@@ -14,20 +15,23 @@ import type { StudentRequest } from "@/lib/types";
 export const metadata: Metadata = { title: "Заявки — Деканат" };
 
 
-const STATUS_BADGE: Record<string, { color: string; label: string }> = {
+const STATUS_BADGE = {
   submitted: { color: "gray", label: "Подана" },
   accepted: { color: "blue", label: "Принята" },
   in_progress: { color: "amber", label: "В работе" },
   ready: { color: "green", label: "Готова" },
   rejected: { color: "red", label: "Отклонена" },
-};
+} satisfies Record<
+  StudentRequest["status"],
+  { color: NonNullable<ComponentProps<typeof Badge>["color"]>; label: string }
+>;
 
 function Stepper({ request, events }: { request: StudentRequest; events: { status: string; at: string; note: string | null }[] }) {
   if (request.status === "rejected") {
     const ev = events.find((e) => e.status === "rejected");
     return (
-      <div className="mt-3 rounded-xl bg-red-500/10 p-3">
-        <p className={cn(typeClass("caption"), "font-medium text-red-600 dark:text-red-400")}>Заявка отклонена</p>
+      <div className="mt-3 rounded-xl bg-destructive/10 p-3">
+        <p className={cn(typeClass("caption"), "font-medium text-foreground")}>Заявка отклонена</p>
         {ev?.note && <p className={cn("mt-0.5", typeClass("caption"), "text-muted-foreground")}>{ev.note}</p>}
       </div>
     );
@@ -114,7 +118,7 @@ export default async function RequestsPage({
       )}
 
       {requests.length === 0 ? (
-        <div className="rounded-2xl bg-surface-2 p-8 text-center">
+        <div className="rounded-2xl border border-border bg-card p-8 text-center text-card-foreground">
           <p className={cn(typeClass("subtitle"), "font-medium")}>Пока ни одной заявки</p>
           <p className={cn("mt-1", typeClass("caption"), "text-muted-foreground")}>
             Справки и заявления оформляются онлайн за пару минут
@@ -124,13 +128,13 @@ export default async function RequestsPage({
         <div className="reveal-items flex flex-col gap-3">
           {requests.map((r) => {
             const st = r.kind === "вопрос" && r.status === "ready"
-              ? { color: "green", label: "Отвечено" }
+              ? { color: "green" as const, label: "Отвечено" }
               : STATUS_BADGE[r.status];
             const latest = events[r.id]?.[events[r.id].length - 1];
             return (
-              <article key={r.id} className="rounded-2xl bg-surface-2 p-4">
+              <article key={r.id} className="rounded-2xl border border-border bg-card p-4 text-card-foreground">
                 <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1">
-                  <Badge variant="solid" color={st.color as never} size="compact">{st.label}</Badge>
+                  <Badge variant="solid" color={st.color} size="compact">{st.label}</Badge>
                   {r.kind === "вопрос" && <Badge variant="ghost" color="gray" size="compact">вопрос</Badge>}
                   <span className={cn(typeClass("micro"), "text-muted-foreground")}>№ {r.number}</span>
                   <span className={cn("ml-auto", typeClass("micro"), "text-muted-foreground")}>
@@ -152,8 +156,8 @@ export default async function RequestsPage({
                   </p>
                 )}
                 {r.answer && (
-                  <div className="mt-3 rounded-xl bg-[color:var(--fluid-accent,#6B97FF)]/8 p-3">
-                    <p className={cn(typeClass("micro"), "font-medium text-[var(--fluid-accent,#6B97FF)]")}>ОТВЕТ ДЕКАНАТА</p>
+                  <div className="mt-3 rounded-xl border border-border bg-surface-2 p-3">
+                    <p className={cn(typeClass("micro"), "font-medium text-muted-foreground")}>Ответ деканата</p>
                     <p className={cn("mt-1", typeClass("caption"))}>{r.answer}</p>
                   </div>
                 )}

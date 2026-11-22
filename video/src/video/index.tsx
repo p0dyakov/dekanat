@@ -4,7 +4,7 @@ import { MACBOOK_PRO_14 } from "@/components/device";
 import { BRAND, FONT_VARS, SANS } from "./brand";
 
 const TITLE_FRAMES = 90;
-const WALKTHROUGH_FRAMES = 1339;
+const WALKTHROUGH_FRAMES = 1340;
 export const LAUNCH_FRAMES = TITLE_FRAMES + WALKTHROUGH_FRAMES;
 
 const SCREEN_BOX: React.CSSProperties = {
@@ -18,13 +18,13 @@ const SCREEN_BOX: React.CSSProperties = {
 
 const CUES: [number, string][] = [
   [0, "Вход"],
-  [120, "Главная"],
-  [296, "Расписание"],
-  [507, "Оценки"],
-  [717, "Заявки"],
-  [828, "Новая заявка"],
-  [1020, "Уведомления"],
-  [1226, "Профиль"],
+  [114, "Главная"],
+  [285, "Расписание"],
+  [492, "Оценки"],
+  [705, "Заявки"],
+  [819, "Новая заявка"],
+  [1017, "Уведомления"],
+  [1221, "Профиль"],
 ];
 
 const Title = () => {

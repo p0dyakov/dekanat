@@ -11,7 +11,7 @@ export function PixelShader({ className }: { className?: string }) {
       shape="swirl"
       type="4x4"
       size={5}
-      speed={0.4}
+      speed={0}
     />
   );
 }

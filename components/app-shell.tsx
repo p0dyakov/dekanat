@@ -7,7 +7,6 @@ import {
   Bell,
   CalendarDays,
   FileText,
-  GraduationCap,
   House,
   LogOut,
   TrendingUp,
@@ -110,14 +109,6 @@ export function AppShell({ student, unread, children }: { student: Student; unre
         <header className="sticky top-0 z-30 flex items-center justify-between border-b border-border bg-background/80 px-3 pb-2.5 pt-[calc(0.625rem+var(--device-safe-top,env(safe-area-inset-top)))] backdrop-blur-md md:hidden">
           <div className="flex items-center gap-1">
             <SidebarTrigger aria-label="Меню" />
-            <FastLink href="/" className="flex items-center gap-2 px-1">
-              <span className="flex size-7 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-                <GraduationCap className="size-4" />
-              </span>
-              <span className="text-[length:var(--fs-title,16px)] leading-[var(--lh-title,22px)] font-semibold tracking-tight">
-                Деканат
-              </span>
-            </FastLink>
           </div>
           <div className="flex items-center gap-2">
             <ThemeToggleButton />

@@ -13,7 +13,7 @@ import { Textarea } from "@/components/ui/textarea";
 
 const CERTS = ["Справка об обучении", "Справка для военкомата", "Справка о стипендии", "Справка в соцзащиту"];
 const PICKUP = ["В деканате лично", "Электронно (PDF на почту)"];
-const FIELD_FILL = "bg-card hover:bg-card focus:hover:bg-card";
+const FIELD_FILL = "border-border bg-background hover:bg-background focus:hover:bg-background";
 
 function Submit() {
   const { pending } = useFormStatus();
@@ -44,17 +44,18 @@ function Segmented<T extends string>({
   options: T[];
 }) {
   return (
-    <div className={cn("grid gap-1 rounded-xl bg-surface-3 p-1", options.length === 3 ? "grid-cols-3" : "grid-cols-2")}>
+    <div className={cn("grid gap-1 rounded-xl bg-background p-1", options.length === 3 ? "grid-cols-3" : "grid-cols-2")}>
       {options.map((o) => (
         <button
           key={o}
           type="button"
+          aria-pressed={value === o}
           onClick={() => onChange(o)}
           className={cn(
             "rounded-lg px-3 py-2",
             typeClass("body"),
             "font-medium transition-colors",
-            value === o ? "bg-background text-foreground shadow-surface-1" : "text-muted-foreground hover:text-foreground"
+            value === o ? "bg-card text-foreground shadow-surface-1" : "text-muted-foreground hover:text-foreground"
           )}
         >
           {o}
@@ -71,7 +72,7 @@ export function RequestForm() {
   const [pickup, setPickup] = useState(PICKUP[0]);
 
   return (
-    <form action={formAction} className="flex flex-col gap-5">
+    <form action={formAction} className="flex flex-col gap-5 rounded-2xl border border-border bg-card p-4 sm:p-5">
       <input type="hidden" name="kind" value={kind} />
 
       <Segmented value={kind} onChange={setKind} options={["справка", "заявление", "вопрос"]} />
@@ -86,8 +87,8 @@ export function RequestForm() {
                   <label
                     key={c}
                     className={cn(
-                      "flex cursor-pointer items-center gap-3 rounded-xl border p-3 transition-colors",
-                      cert === c ? "border-[color:var(--fluid-accent,#6B97FF)] bg-[color:var(--fluid-accent,#6B97FF)]/5" : "border-border hover:bg-surface-2"
+                      "flex cursor-pointer items-center gap-3 rounded-xl border bg-surface-2 p-3 transition-colors",
+                      cert === c ? "border-[color:var(--fluid-accent,#6B97FF)] bg-[color:var(--fluid-accent,#6B97FF)]/10" : "border-border hover:bg-surface-3"
                     )}
                   >
                     <input
@@ -113,8 +114,8 @@ export function RequestForm() {
                   <label
                     key={p}
                     className={cn(
-                      "flex cursor-pointer items-center gap-3 rounded-xl border p-3 transition-colors",
-                      pickup === p ? "border-[color:var(--fluid-accent,#6B97FF)] bg-[color:var(--fluid-accent,#6B97FF)]/5" : "border-border hover:bg-surface-2"
+                      "flex cursor-pointer items-center gap-3 rounded-xl border bg-surface-2 p-3 transition-colors",
+                      pickup === p ? "border-[color:var(--fluid-accent,#6B97FF)] bg-[color:var(--fluid-accent,#6B97FF)]/10" : "border-border hover:bg-surface-3"
                     )}
                   >
                     <input
@@ -178,7 +179,7 @@ export function RequestForm() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={spring.fast}
-          className={cn(typeClass("caption"), "text-destructive")}
+          className={cn(typeClass("caption"), "rounded-xl bg-destructive/10 p-3 text-destructive")}
         >
           {state.error}
         </motion.p>
