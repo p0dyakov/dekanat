@@ -4,8 +4,8 @@
 
 В личном кабинете студент смотрит расписание и оценки, заказывает справки и читает объявления.
 
-[Открыть кабинет](https://dekanat.p0dyakov.workers.dev). 
-[Исходный код](https://github.com/p0dyakov/dekanat). 
+[Открыть кабинет](https://dekanat.p0dyakov.workers.dev)  
+[Исходный код](https://github.com/p0dyakov/dekanat)  
 
 </div>
 
