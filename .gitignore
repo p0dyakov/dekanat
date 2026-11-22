@@ -11,3 +11,6 @@ video/public/clips/
 data/
 next-env.d.ts
 dekanat.db
+video/
+scripts/
+app/dev-login/
