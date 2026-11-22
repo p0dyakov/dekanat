@@ -1,8 +1,10 @@
 "use client";
 
 import { Dithering } from "@paper-design/shaders-react";
+import { useReducedMotion } from "motion/react";
 
 export function PixelShader({ className }: { className?: string }) {
+  const reduceMotion = useReducedMotion();
   return (
     <Dithering
       className={className}
@@ -11,7 +13,7 @@ export function PixelShader({ className }: { className?: string }) {
       shape="swirl"
       type="4x4"
       size={5}
-      speed={0}
+      speed={reduceMotion ? 0 : 0.08}
     />
   );
 }

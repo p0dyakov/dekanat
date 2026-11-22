@@ -54,7 +54,6 @@ export function LoginForm() {
           placeholder="Логин"
           value={login}
           onChange={(e) => setLogin(e.target.value)}
-          autoFocus
         />
         <Input name="password" type="password" autoComplete="current-password" placeholder="Пароль" />
         {state?.error && (
