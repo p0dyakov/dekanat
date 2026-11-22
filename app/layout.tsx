@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, Source_Serif_4 } from "next/font/google";
 import { GeistSerifRegular } from "geist/font/serif/regular";
 import "./globals.css";
@@ -23,6 +23,10 @@ const serifCyrillic = Source_Serif_4({
 export const metadata: Metadata = {
   title: "App",
   description: "",
+};
+
+export const viewport: Viewport = {
+  viewportFit: "cover",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

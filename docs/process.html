@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Цифровой деканат будущего</title>
+<style>
+@font-face {
+  font-family: "Geist";
+  src: url("../node_modules/geist/dist/fonts/geist-sans/Geist-Regular.woff2") format("woff2");
+  font-weight: 400;
+}
+@font-face {
+  font-family: "Geist";
+  src: url("../node_modules/geist/dist/fonts/geist-sans/Geist-Bold.woff2") format("woff2");
+  font-weight: 700;
+}
+@font-face {
+  font-family: "Geist Mono";
+  src: url("../node_modules/geist/dist/fonts/geist-mono/GeistMono-Regular.woff2") format("woff2");
+  font-weight: 400;
+}
+@font-face {
+  font-family: "Geist Mono";
+  src: url("../node_modules/geist/dist/fonts/geist-mono/GeistMono-Bold.woff2") format("woff2");
+  font-weight: 700;
+}
+@page {
+  size: A4;
+  margin: 16mm 17mm;
+}
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+html, body {
+  background: #fff;
+}
+body {
+  font-family: "Geist", sans-serif;
+  font-size: 10pt;
+  line-height: 1.55;
+  color: #16181d;
+}
+.page {
+  page-break-after: always;
+}
+.page:last-child {
+  page-break-after: auto;
+}
+h1 {
+  font-size: 24pt;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 7mm;
+}
+h2 {
+  font-size: 11.5pt;
+  font-weight: 600;
+  margin: 6mm 0 2.5mm;
+}
+p {
+  margin-bottom: 3.5mm;
+}
+a {
+  color: #2456d6;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.mono {
+  font-family: "Geist Mono", monospace;
+  font-size: 0.92em;
+}
+figure {
+  margin: 0;
+}
+.shot {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+figcaption {
+  font-size: 8.5pt;
+  color: #6b7078;
+  margin-top: 2mm;
+}
+.cols {
+  display: flex;
+  align-items: flex-start;
+  gap: 13mm;
+}
+.col-l {
+  width: 115mm;
+  flex: none;
+}
+.col-r {
+  width: 48mm;
+  flex: none;
+}
+.col-l figure + figure {
+  margin-top: 7mm;
+}
+.links {
+  margin-top: 2mm;
+}
+</style>
+</head>
+<body>
+
+<section class="page">
+  <h1>Цифровой деканат будущего</h1>
+  <p>Студент открывает один кабинет вместо расписания в файле, оценок в ведомости и объявлений в чате. Здесь же можно заказать справку и посмотреть ответ деканата.</p>
+  <p class="links"><a href="https://dekanat.p0dyakov.workers.dev">Открыть кабинет</a>, <a href="https://github.com/p0dyakov/dekanat">Исходный код</a></p>
+  <p>Для проверки войдите как <span class="mono">ivanova</span> или <span class="mono">petrov</span>. Пароль для обоих: <span class="mono">dekanat2026</span>. Все данные вымышлены.</p>
+  <figure>
+    <img class="shot" src="preview.png" alt="Главная страница кабинета" style="width:176mm">
+    <figcaption>Главная</figcaption>
+  </figure>
+</section>
+
+<section class="page">
+  <h1>Экраны кабинета</h1>
+  <div class="cols">
+    <div class="col-l">
+      <figure>
+        <img class="shot" src="preview-schedule.png" alt="Расписание" style="width:115mm">
+        <figcaption>Расписание</figcaption>
+      </figure>
+      <figure>
+        <img class="shot" src="preview-request.png" alt="Новая заявка" style="width:115mm">
+        <figcaption>Новая заявка</figcaption>
+      </figure>
+    </div>
+    <div class="col-r">
+      <figure>
+        <img class="shot" src="preview-mobile.png" alt="Главная на телефоне" style="width:48mm">
+        <figcaption>Главная на телефоне</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<section class="page">
+  <h1>Как сделали прототип</h1>
+  <h2>Что подсказали примеры</h2>
+  <p>В кабинетах НГУ и МИСИС посмотрели, как студенты находят учебные данные и заказывают справки. В ClassPass посмотрели, как выбирать день, а в Wise, как фильтровать уведомления.</p>
+  <p class="links"><a href="https://github.com/p0dyakov/dekanat/blob/main/docs/RESEARCH.md">Что есть в студенческих кабинетах</a>, <a href="https://github.com/p0dyakov/dekanat/blob/main/docs/UI_RESEARCH.md">Как устроены экраны</a></p>
+  <h2>Что изменили</h2>
+  <p>Сначала видео собирали из отдельных клипов: после входа на мгновение возвращалась форма. Перезаписали демонстрацию одним дублем: открываем разделы через меню слева.</p>
+  <h2>Как защищены данные</h2>
+  <p>Вместо паролей храним хеши с индивидуальной солью. После входа сервер устанавливает cookie с флагом HttpOnly, поэтому скрипты страницы её не читают. Сервер берёт номер студента из сессии, а не из запроса. Локально используем SQLite, на сайте Cloudflare D1.</p>
+  <h2>Где использовали ИИ</h2>
+  <p>Devin помог написать код и проверить экраны. Отдельно попросили Codex написать тесты, например «Write comprehensive unit tests for lib/format.ts». Тесты проверяют форматирование дат, времени и словоформ: <a href="https://github.com/p0dyakov/dekanat/blob/main/lib/format.test.ts">lib/format.test.ts</a>.</p>
+</section>
+
+</body>
+</html>

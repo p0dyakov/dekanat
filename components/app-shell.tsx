@@ -60,7 +60,7 @@ export function AppShell({ student, unread, children }: { student: Student; unre
   return (
     <SidebarProvider persist={false} width="15rem" className="min-h-dvh bg-background text-foreground">
       <Sidebar>
-        <SidebarContent className="pt-4">
+        <SidebarContent className="pt-4 md:pt-11">
           <SidebarMenu>
             {items.map((item) => (
               <SidebarMenuItem key={item.href}>
@@ -107,7 +107,7 @@ export function AppShell({ student, unread, children }: { student: Student; unre
 
       <SidebarInset className="min-w-0">
         {/* Mobile header */}
-        <header className="sticky top-0 z-30 flex items-center justify-between border-b border-border bg-background/80 px-3 py-2.5 backdrop-blur-md md:hidden">
+        <header className="sticky top-0 z-30 flex items-center justify-between border-b border-border bg-background/80 px-3 pb-2.5 pt-[calc(0.625rem+var(--device-safe-top,env(safe-area-inset-top)))] backdrop-blur-md md:hidden">
           <div className="flex items-center gap-1">
             <SidebarTrigger aria-label="Меню" />
             <FastLink href="/" className="flex items-center gap-2 px-1">
@@ -132,12 +132,12 @@ export function AppShell({ student, unread, children }: { student: Student; unre
           </div>
         </header>
 
-        <main className="mx-auto w-full max-w-3xl flex-1 px-4 pb-28 pt-5 md:px-8 md:pb-12 md:pt-8">
+        <main className="mx-auto w-full max-w-3xl flex-1 px-4 pb-28 pt-5 md:px-8 md:pb-12 md:pt-14">
           {children}
         </main>
 
         {/* Mobile bottom tabbar */}
-        <nav className="fixed inset-x-0 bottom-0 z-30 border-t border-border bg-background/90 pb-[env(safe-area-inset-bottom)] backdrop-blur-md md:hidden">
+        <nav className="fixed inset-x-0 bottom-0 z-30 border-t border-border bg-background/90 pb-[var(--device-safe-bottom,env(safe-area-inset-bottom))] backdrop-blur-md md:hidden">
           <div className="grid grid-cols-5">
             {NAV.map((item) => {
               const active = isActive(pathname, item.href);

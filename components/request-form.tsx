@@ -13,6 +13,7 @@ import { Textarea } from "@/components/ui/textarea";
 
 const CERTS = ["Справка об обучении", "Справка для военкомата", "Справка о стипендии", "Справка в соцзащиту"];
 const PICKUP = ["В деканате лично", "Электронно (PDF на почту)"];
+const FIELD_FILL = "bg-card hover:bg-card focus:hover:bg-card";
 
 function Submit() {
   const { pending } = useFormStatus();
@@ -75,13 +76,7 @@ export function RequestForm() {
 
       <Segmented value={kind} onChange={setKind} options={["справка", "заявление", "вопрос"]} />
 
-      <motion.div
-        key={kind}
-        initial={{ opacity: 0, y: 6 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={spring.fast}
-        className="flex flex-col gap-4"
-      >
+      <div key={kind} className="flex flex-col gap-4">
         {kind === "справка" ? (
           <>
             <div>
@@ -140,14 +135,14 @@ export function RequestForm() {
             </div>
             <div>
               <p className={cn("mb-2", typeClass("body"), "font-medium")}>Комментарий <span className="font-normal text-muted-foreground">(необязательно)</span></p>
-              <Input name="detail" placeholder="Например: для банка, два экземпляра" />
+              <Input name="detail" placeholder="Например: для банка, два экземпляра" className={FIELD_FILL} />
             </div>
           </>
         ) : kind === "заявление" ? (
           <>
             <div>
               <p className={cn("mb-2", typeClass("body"), "font-medium")}>Тема заявления</p>
-              <Input name="title" placeholder="Например: продление сессии по болезни" />
+              <Input name="title" placeholder="Например: продление сессии по болезни" className={FIELD_FILL} />
             </div>
             <div>
               <p className={cn("mb-2", typeClass("body"), "font-medium")}>Текст заявления</p>
@@ -155,7 +150,7 @@ export function RequestForm() {
                 name="detail"
                 rows={5}
                 placeholder="Прошу рассмотреть…"
-                className="resize-none"
+                className={cn("resize-none", FIELD_FILL)}
               />
             </div>
           </>
@@ -163,7 +158,7 @@ export function RequestForm() {
           <>
             <div>
               <p className={cn("mb-2", typeClass("body"), "font-medium")}>Тема вопроса</p>
-              <Input name="title" placeholder="Например: перенос дедлайна по курсовой" />
+              <Input name="title" placeholder="Например: перенос дедлайна по курсовой" className={FIELD_FILL} />
             </div>
             <div>
               <p className={cn("mb-2", typeClass("body"), "font-medium")}>Вопрос деканату</p>
@@ -171,12 +166,12 @@ export function RequestForm() {
                 name="detail"
                 rows={4}
                 placeholder="Опишите вопрос — ответ придёт в заявки и уведомления"
-                className="resize-none"
+                className={cn("resize-none", FIELD_FILL)}
               />
             </div>
           </>
         )}
-      </motion.div>
+      </div>
 
       {state?.error && (
         <motion.p
